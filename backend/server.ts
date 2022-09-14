@@ -24,7 +24,7 @@ fastify.get('/', async (request, response) => {
 	response.type('text/html').send(readFileSync('index.html'))
 })
 
-fastify.listen({ port: 3000 }, function (error) {
+fastify.listen({ port: 3001 }, function (error) {
 	if (error) {
 		fastify.log.error(error)
 		process.exit(1)
