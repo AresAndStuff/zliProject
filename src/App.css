@@ -28,6 +28,12 @@
   color: #61dafb;
 }
 
+.err{
+  color: rgb(252, 96, 96);
+  font-size: smaller;
+  
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
