@@ -1,4 +1,4 @@
-const root = "http://localhost:3001";
+const root = "http://localhost:3000";
 
 export function newTask(title, status = false) {
   return fetch(`${root}/auth/cookie/tasks`, {
@@ -54,9 +54,9 @@ export function deleteTask(id) {
 
 export function login(email, password) {
   return fetch(`${root}/auth/cookie/login`, {
+    credentials: "include",
     method: "POST",
     headers: {
-      Accept: "application/json",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -80,8 +80,17 @@ export function logout(email) {
   });
 }
 
-export function status() {
-  return fetch(`${root}/auth/cookie/status`, {
-    credentials: "include",
-  });
+export async function status() {
+  try {
+    const res = await fetch(`${root}/auth/cookie/status`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    return err;
+  }
 }

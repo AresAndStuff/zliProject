@@ -5,9 +5,12 @@ import TextField from "@mui/joy/TextField";
 import Button from "@mui/joy/Button";
 import Link from "@mui/joy/Link";
 import { useState } from "react";
-
+import { login } from "../api/taskApiProvider";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -16,6 +19,7 @@ export default function LoginPage() {
   const [error, setError] = useState({
     email: "",
     password: "",
+    requestError: "",
   });
 
   const onInputChange = (e) => {
@@ -36,6 +40,11 @@ export default function LoginPage() {
         case "email":
           if (!value) {
             stateObj[name] = "Please enter Username.";
+          } else {
+            let allowed = /^([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$)/;
+            if (!allowed.test(value)) {
+              stateObj[name] = "Please provide a valid email address.";
+            }
           }
           break;
 
@@ -53,15 +62,22 @@ export default function LoginPage() {
     });
   };
 
+  let logInDisabled = true;
+  if (input.password && input.email) {
+    if (!error.password && !error.email) {
+      logInDisabled = false;
+    }
+  }
+
   return (
     <CssVarsProvider>
       <Sheet
         sx={{
           maxWidth: 400,
-          mx: "auto", // margin left & right
-          my: 4, // margin top & botom
-          py: 3, // padding top & bottom
-          px: 2, // padding left & right
+          mx: "auto",
+          my: 4,
+          py: 3,
+          px: 2,
           display: "flex",
           flexDirection: "column",
           gap: 2,
@@ -75,6 +91,9 @@ export default function LoginPage() {
           </Typography>
           <Typography level="body2">Login to continue</Typography>
         </div>
+        {error.requestError && (
+          <span className="err">{error.requestError}</span>
+        )}
         <TextField
           name="email"
           type="email"
@@ -98,6 +117,18 @@ export default function LoginPage() {
         <Button
           sx={{
             mt: 1,
+          }}
+          disabled={logInDisabled}
+          onClick={() => {
+            login(input.email, input.password)
+              .then((res) => {
+                if (res.ok) {
+                  navigate(0);
+                }
+              })
+              .catch((err) => {
+                new Error(err.message || err);
+              });
           }}
         >
           Log in

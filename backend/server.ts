@@ -15,7 +15,7 @@ setupJwtEndpoint(fastify)
 
 fastify.register(cors, {
   origin: true,
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Credentials'],
   methods: ['GET', 'PUT', 'POST', 'DELETE'],
   credentials: true
 })
@@ -24,7 +24,7 @@ fastify.get('/', async (request, response) => {
   response.type('text/html').send(readFileSync('index.html'))
 })
 
-fastify.listen({ port: 3001 }, function (error) {
+fastify.listen({ port: 3000 }, function (error) {
   if (error != null) {
     fastify.log.error(error)
     process.exit(1)
